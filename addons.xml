@@ -3,7 +3,7 @@
   <addon
     id="plugin.video.ShahidMBC"
     version="0.7.0"
-    name="HMB"
+    name="Shahid MBC"
     provider-name="HMB">
     <requires>
       <import addon="xbmc.python"
@@ -14,8 +14,8 @@
     <provides>video</provides>
     </extension>
       <extension point="xbmc.addon.metadata">
-      <summary>HMB repo</summary>
-      <description>HMB repo</description>
+      <summary>Shahid MBC</summary>
+      <description>Shahid MBC</description>
      <platform>all</platform>
     </extension>
   </addon>
