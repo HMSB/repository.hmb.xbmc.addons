@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addons>
+  <addon
+    id="plugin.video.ShahidMBC"
+    version="1.6.0"
+    name="HMB"
+    provider-name="HMB">
+    <requires>
+      <import addon="xbmc.python"
+            version="2.0"/>
+    </requires>
+    <extension point="xbmc.python.pluginsource"
+             library="default.py">
+    <provides>video</provides>
+    </extension>
+      <extension point="xbmc.addon.metadata">
+      <summary>HMB repo</summary>
+      <description>HMB repo</description>
+     <platform>all</platform>
+    </extension>
+  </addon>
+</addons>
