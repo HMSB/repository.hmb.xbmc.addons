@@ -30,14 +30,17 @@ urlMain = "http://shahid.mbc.net"
 iconPathChannels = os.path.join(thumbsDir, "channels.png")
 iconPathWhats_new = os.path.join(thumbsDir, "whats_new.png")
 iconPathMost_watched = os.path.join(thumbsDir, "most_watchd.png")
+iconPathAtoZ = os.path.join(thumbsDir, "AtoZ.png")
 urlBase = "http://shahid.mbc.net"
 urlChannels = "http://shahid.mbc.net/media/channels"
+urlSearch = "http://shahid.mbc.net/Ajax/seriesFilter?year=0&dialect=0&title=0&genre=0&channel=0&prog_type=0&media_type=0&airing=0&sort=alpha&series_id=0&offset=0&sub_type=0&limit=10000"
 MBCproviderID = '2fda1d3fd7ab453cad983544e8ed70e4'
 
 def index(): 
     addDir("Channles", "", 'listChannels', iconPathChannels)
-    addDir("New Items", "", 'showMessage', iconPathWhats_new)
-    addDir("Most Watched", "", 'showMessage', iconPathMost_watched)
+    addDir("New Items", "http://shahid.mbc.net/media/episodes?sort=latest", 'listEpisodesSorted', iconPathWhats_new)
+    addDir("Most Watched", "http://shahid.mbc.net/media/episodes?sort=popular_all", 'listEpisodesSorted', iconPathMost_watched)
+    addDir("A-Z", urlSearch, 'listShowsSorted', iconPathAtoZ)
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
@@ -85,6 +88,26 @@ def listShows(ch_path):
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
 
+def listShowsSorted(urlCh):
+    htmlfile = urllib.urlopen(urlCh)
+    htmltext = htmlfile.read()
+    regex1 = '''<span class="title major">(.+?)</span>'''
+    regex2 = '''title=""><b><img src="(.+?)"'''
+    regex3 = '''" href="(.*?)" title="">'''
+    pattern1 = re.compile(regex1)
+    pattern2 = re.compile(regex2)
+    pattern3 = re.compile(regex3)
+    show_name = re.findall(pattern1,htmltext)
+    img_path = re.findall(pattern2,htmltext)
+    ch_path = re.findall(pattern3,htmltext)
+    i = 0
+    while i< len(show_name):
+        addDir(show_name[i], ch_path[i], 'listEpsodes', img_path[i])
+        i+=1
+    if forceViewMode:
+        xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
+    xbmcplugin.endOfDirectory(pluginhandle)
+
 def listEpsodes(ch_path):
     #urlCh = ch_path
     #http://shahid.mbc.net/Ajax/episode/761?offset=10&media_type=program&limit=10&sort=season&season=null
@@ -108,6 +131,28 @@ def listEpsodes(ch_path):
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
+
+def listEpisodesSorted(urlCh):
+  #  urlCh = "http://shahid.mbc.net/media/episodes?sort=latest"
+    htmlfile = urllib.urlopen(urlCh)
+    htmltext = htmlfile.read()
+    regex1 = '''</span><span class="title">(.*?)</span>'''
+    regex2 = '''img src="(.*?)" alt="" border="0" height="" width=""'''
+    regex3 = '''</span><a href="(.+?)" title='''
+    pattern1 = re.compile(regex1)
+    pattern2 = re.compile(regex2)
+    pattern3 = re.compile(regex3)
+    show_name = re.findall(pattern1,htmltext)
+    img_path = re.findall(pattern2,htmltext)
+    ch_path = re.findall(pattern3,htmltext)
+    i = 0
+    while i< len(show_name):
+        addDir(show_name[i], ch_path[i], 'playVideo', img_path[i])
+        i+=1
+    if forceViewMode:
+        xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
+    xbmcplugin.endOfDirectory(pluginhandle)
+
 
 def playVideo(ch_path):
  # extracting mediaID
@@ -174,8 +219,13 @@ mode = urllib.unquote_plus(params.get('mode', ''))
 url = urllib.unquote_plus(params.get('url', ''))
 type = urllib.unquote_plus(params.get('type', ''))
 
+
 if mode == 'playVideo':
     playVideo(url)
+elif mode == 'listShowsSorted':
+    listShowsSorted(url)    
+elif mode == 'listEpisodesSorted':
+    listEpisodesSorted(url)    
 elif mode == 'listEpsodes':
     listEpsodes(url)
 elif mode == 'listShows':
