@@ -2,7 +2,7 @@
 <addons>
   <addon
     id="plugin.video.ShahidMBC"
-    version="1.6.0"
+    version="0.7.0"
     name="HMB"
     provider-name="HMB">
     <requires>
