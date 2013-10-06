@@ -15,3 +15,7 @@
 
 0.7.1
 - Testing repo update
+
+0.7.3
+- Display show nam in  the "new Item" 
+- some code optimizations
