@@ -12,3 +12,6 @@
 - Shahid icon change
 - Activate most watched and and new items
 - add main entry for all program sorted alphabetically from A to Z
+
+0.7.1
+- Testing repo update
