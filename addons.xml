@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addons>
+<<<<<<< HEAD
 <addon id="plugin.video.ShahidMBC" name="Shahid MBC" version="0.7.0" provider-name="HMB">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
@@ -15,4 +16,6 @@
         <website>http://Shahid.mbc.net</website>
     </extension>
 </addon>
+=======
+>>>>>>> daf646fb1e4310adff375f9df6933f8ee8afe650
 </addons>
