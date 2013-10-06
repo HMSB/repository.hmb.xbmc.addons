@@ -21,7 +21,7 @@
   </addon>
 <addon id="repository.hmb.xbmc-addons" name="HMB XBMC Add-on Repository" version="1.0.0" provider-name="HMB">
     <extension point="xbmc.addon.repository" name="HMB XBMC Add-on Repository">
-        <info compressed="false">https://github.com/HMSB/repository.hmb.xbmc.addons/raw/master/addons.xml</info>
+        <info compressed="true">https://github.com/HMSB/repository.hmb.xbmc.addons/raw/master/addons.xml</info>
         <checksum>https://github.com/HMSB/repository.hmb.xbmc.addons/raw/master/addons.xml.md5</checksum>
         <datadir zip="true">https://github.com/HMSB/repository.hmb.xbmc.addons/raw/master/repo</datadir>
     </extension>
