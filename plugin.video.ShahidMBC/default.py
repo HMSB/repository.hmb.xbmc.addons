@@ -136,7 +136,8 @@ def listEpisodesSorted(urlCh):
   #  urlCh = "http://shahid.mbc.net/media/episodes?sort=latest"
     htmlfile = urllib.urlopen(urlCh)
     htmltext = htmlfile.read()
-    regex1 = '''</span><span class="title">(.*?)</span>'''
+    #regex1 = '''</span><span class="title">(.*?)</span>'''
+    regex1 = '''<a href="/media/video/(.*?)" title=""><b>'''
     regex2 = '''img src="(.*?)" alt="" border="0" height="" width=""'''
     regex3 = '''</span><a href="(.+?)" title='''
     pattern1 = re.compile(regex1)
@@ -144,10 +145,12 @@ def listEpisodesSorted(urlCh):
     pattern3 = re.compile(regex3)
     show_name = re.findall(pattern1,htmltext)
     img_path = re.findall(pattern2,htmltext)
-    ch_path = re.findall(pattern3,htmltext)
+    ch_path = re.findall(pattern3,htmltext) 
     i = 0
     while i< len(show_name):
-        addDir(show_name[i], ch_path[i], 'playVideo', img_path[i])
+        ep_name_print = re.sub( '_', ' ', show_name[i])
+        ep_name_print = re.sub( '.*/', ' ', ep_name_print)
+        addDir( ep_name_print, ch_path[i],'playVideo', img_path[i])
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
@@ -184,15 +187,10 @@ def playVideo(ch_path):
         playResPos = resolution.index(prefRes)
         
  #playlist
-    playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
-    playlist.clear()
-    # sample rtmpURL
-    # play_string = '''rtmpe://mbc3.csl.delvenetworks.com/a6344/v1/mp4:media/2fda1d3fd7ab453cad983544e8ed70e4/0c0d5121b14c4d5eb46752981de067af/16c00e0bcd074aa6b48fc652fa0945b8/al_arraf_s01_e26.mp4'''
-    playlist.add(rtmpURL[playResPos])
-    xbmc.executebuiltin('playlist.playoffset(video,0)')     
-    #another method to play playlist 
-    #xbmc.Player().play( playlist)
-
+    # rtmpURL[playResPos] = '''rtmpe://mbc3.csl.delvenetworks.com/a6344/v1/mp4:media/2fda1d3fd7ab453cad983544e8ed70e4/0c0d5121b14c4d5eb46752981de067af/16c00e0bcd074aa6b48fc652fa0945b8/al_arraf_s01_e26.mp4'''
+    #xbmc.executebuiltin('playlist.playoffset(video,0)')     
+    xbmc.Player().play(rtmpURL[playResPos])
+    
 def showMessage(msg):
         xbmc.executebuiltin('XBMC.Notification(%s, 5000)'%(msg)) 
         
