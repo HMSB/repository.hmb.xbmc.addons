@@ -19,15 +19,15 @@
      <platform>all</platform>
     </extension>
   </addon>
-<addon id="repository.hmb.xbmc-addons" name="HMB XBMC Add-on Repository" version="1.0.0" provider-name="HMB">
+<addon id="repository.hmb.xbmc.addons" name="HMB XBMC Add-on Repository" version="1.0.0" provider-name="HMB">
     <extension point="xbmc.addon.repository" name="HMB XBMC Add-on Repository">
-        <info compressed="false">https://github.com/HMSB/repository.hmb.xbmc.addons/raw/master/addons.xml</info>
-     #   <checksum>https://github.com/HMSB/repository.hmb.xbmc.addons/raw/master/addons.xml.md5</checksum>
-        <datadir zip="true">https://github.com/HMSB/repository.hmb.xbmc.addons/raw/master/repo</datadir>
+        <info compressed="false">https://github.com/hmsb/repository.arabic.xbmc-addons/raw/master/addons.xml</info>
+        <checksum>https://github.com/hmsb/repository.arabic.xbmc-addons/raw/master/addons.xml.md5</checksum>
+        <datadir zip="true">https://github.com/hmsb/repository.arabic.xbmc-addons/raw/master/repo</datadir>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary>HMB repo Addons</summary>
-        <description>HMB repo Addons</description>
+        <summary>Install HMB Addons</summary>
+        <description>Download and install addons by HMB</description>
         <platform>all</platform>
     </extension>
 </addon>
