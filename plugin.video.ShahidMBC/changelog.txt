@@ -19,3 +19,9 @@
 0.7.3
 - Display show nam in  the "new Item" 
 - some code optimizations
+
+0.8.0
+- Video resume feature
+- Items are marked as watched once finish
+- Also you can press "w" to mark watched
+- Video Plot is added if it does exist.
