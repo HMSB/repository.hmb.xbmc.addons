@@ -126,7 +126,7 @@ def listEpsodes(ch_path):
     ch_path = re.findall(pattern3,htmltext)
     i = 0
     while i< len(show_name):
-        addDir(show_name[i], ch_path[i], 'playVideo', img_path[i])
+        addLink(show_name[i], ch_path[i], 'playVideo', img_path[i], 'Plot', 000, 'date', str(i))
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
@@ -136,7 +136,6 @@ def listEpisodesSorted(urlCh):
   #  urlCh = "http://shahid.mbc.net/media/episodes?sort=latest"
     htmlfile = urllib.urlopen(urlCh)
     htmltext = htmlfile.read()
-    #regex1 = '''</span><span class="title">(.*?)</span>'''
     regex1 = '''<a href="/media/video/(.*?)" title=""><b>'''
     regex2 = '''img src="(.*?)" alt="" border="0" height="" width=""'''
     regex3 = '''</span><a href="(.+?)" title='''
@@ -145,26 +144,26 @@ def listEpisodesSorted(urlCh):
     pattern3 = re.compile(regex3)
     show_name = re.findall(pattern1,htmltext)
     img_path = re.findall(pattern2,htmltext)
-    ch_path = re.findall(pattern3,htmltext) 
+    ch_path = re.findall(pattern3,htmltext)
     i = 0
     while i< len(show_name):
         ep_name_print = re.sub( '_', ' ', show_name[i])
         ep_name_print = re.sub( '.*/', ' ', ep_name_print)
-        addDir( ep_name_print, ch_path[i],'playVideo', img_path[i])
+        addLink(ep_name_print, ch_path[i], 'playVideo', img_path[i], 'Plot', 000, 'date', str(i))
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
 
 
-def playVideo(ch_path):
- # extracting mediaID
+def videoInfo(ch_path):
+    # extracting mediaID
     htmlfile = urllib.urlopen(urlBase + ch_path)
     htmltext = htmlfile.read()
     regex1 = '''mediaId=(.*?)&&default'''
     pattern1 = re.compile(regex1)
     mediaID = re.findall(pattern1,htmltext)    
- # obtaining rtmpURL
+    # obtaining rtmpURL
     urlContentProvider = 'http://production.ps.delve.cust.lldns.net/PlaylistService'
     headerValues = {'content-type' : 'text/soap+xml'}
     soapParm = '''<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><SOAP-ENV:Body><tns:getPlaylistByMediaId xmlns:tns="http://service.data.media.pluggd.com"><tns:in0>''' + mediaID[0] + '''</tns:in0><tns:in1 xsi:nil="true"/></tns:getPlaylistByMediaId></SOAP-ENV:Body></SOAP-ENV:Envelope>'''
@@ -173,23 +172,51 @@ def playVideo(ch_path):
     urlResponse = response.read()
     regex1 = '''</previewStream><url>(.*?)</url><videoBitRate>'''
     regex2 = '''<videoHeightInPixels>(.*?)</videoHeightInPixels>'''  
+    regex3 = '''<description>(.*?)</description>'''
     pattern1 = re.compile(regex1)
     pattern2 = re.compile(regex2)
+    pattern3 = re.compile(regex3)  
     rtmpURL = re.findall(pattern1,urlResponse)
     resolution = re.findall(pattern2,urlResponse)
- # selecting resolution
+    descList =  re.findall(pattern3,urlResponse)
+    if  not descList:
+        desc = 'Sorry, Shahid Has no Plot'
+    else:
+        desc = descList[0]
+    videoProp = [rtmpURL, resolution, desc]
+    return videoProp
+
+def playVideo(ch_path):
+    # selecting resolution
+    videoProp = videoInfo(ch_path)
+    rtmpURL =    videoProp[0]
+    resolution = videoProp[1]
+    desc = videoProp[2]
     resolution = map(int, resolution)
     if prefRes not in resolution:
         playResPos = resolution.index(max(resolution))
     elif prefRes > max(resolution):
         playResPos = resolution.index(max(resolution)) 
     else: 
-        playResPos = resolution.index(prefRes)
-        
- #playlist
-    # rtmpURL[playResPos] = '''rtmpe://mbc3.csl.delvenetworks.com/a6344/v1/mp4:media/2fda1d3fd7ab453cad983544e8ed70e4/0c0d5121b14c4d5eb46752981de067af/16c00e0bcd074aa6b48fc652fa0945b8/al_arraf_s01_e26.mp4'''
-    #xbmc.executebuiltin('playlist.playoffset(video,0)')     
-    xbmc.Player().play(rtmpURL[playResPos])
+        playResPos = resolution.index(prefRes)       
+    # Play video
+    listitem = xbmcgui.ListItem(path=rtmpURL[playResPos])
+    listitem.setInfo(type="Video", infoLabels={ "plot": desc})
+    xbmcplugin.setResolvedUrl(pluginhandle, True, listitem)
+    
+def addLink(name, url, mode, iconimage, desc, length="", date="", nr=""):
+    u = sys.argv[0]+"?url="+urllib.quote_plus(url)+"&mode="+str(mode)
+    ok = True
+    liz = xbmcgui.ListItem(name, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+    liz.setInfo(type="Video", infoLabels={"Title": name, "Plot": desc, "Aired": date, "Episode": nr})
+    if length:
+        liz.addStreamInfo('video', {'duration': int(length)})
+    liz.setProperty('IsPlayable', 'true')
+    if useThumbAsFanart:
+        liz.setProperty("fanart_image", iconimage)
+    ok = xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]), url=u, listitem=liz)
+    return ok
+   
     
 def showMessage(msg):
         xbmc.executebuiltin('XBMC.Notification(%s, 5000)'%(msg)) 
