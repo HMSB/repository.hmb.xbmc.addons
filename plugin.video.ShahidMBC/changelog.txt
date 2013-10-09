@@ -25,3 +25,6 @@
 - Items are marked as watched once finish
 - Also you can press "w" to mark watched
 - Video Plot is added if it does exist.
+
+0.8.1
+- Fix channel missed items in channel list
