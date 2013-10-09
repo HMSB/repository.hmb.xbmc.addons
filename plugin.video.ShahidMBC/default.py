@@ -48,7 +48,7 @@ def index():
 def listChannels():
     htmlfile = urllib.urlopen(urlChannels)
     htmltext = htmlfile.read()
-    regex1 = '''<li><a href="/media/channel/'''+'''[1-9]*'''+'''/(.+?)"'''
+    regex1 = '''<li><a href="/media/channel/'''+'''[0-9]*'''+'''/(.+?)"'''
     regex2 = '''title=""><b><img src="(.+?)"'''
     regex3 = '''<a href="(.+?)" title='''
     pattern1 = re.compile(regex1)
