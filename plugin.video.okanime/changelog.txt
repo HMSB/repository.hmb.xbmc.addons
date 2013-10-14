@@ -1,0 +1,14 @@
+0.0.0
+- Thanks to AddonScriptorDE as we used some of his code as a base for this plugin
+
+0.1.0
+- intial version
+
+0.2.0
+- scraping latest
+
+0.3.0
+- complete change of scrapping method due site structure
+
+0.4.0
+- prepare for release
