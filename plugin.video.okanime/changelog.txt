@@ -15,3 +15,6 @@
 
 0.5.0
 - enabling alphabetical order list
+
+0.6.0
+- enabling anime movie list
