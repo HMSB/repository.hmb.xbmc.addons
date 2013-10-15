@@ -10,7 +10,7 @@ import datetime
 import xbmcplugin
 import xbmcgui
 import xbmcaddon
-import json
+import string
 
 socket.setdefaulttimeout(30)
 pluginhandle = int(sys.argv[1])
@@ -33,19 +33,29 @@ iconPathMore = os.path.join(thumbsDir, "more.jpeg")
 iconPathAtoZ = os.path.join(thumbsDir, "AtoZ.png")
 urlShows = "http://okanime.com/category/anime/page/1/" 
 urlNewitems = ""
-urlSearch = ""
+urlAtoZ = "http://okanime.com/letter/A/?orderby=title"
 
 def index(): 
     addDir("Latest Items آخر الإضافات", urlShows, 'listShows', iconPathShows)
-    addDir("A-Z", urlSearch, 'showMessage', iconPathAtoZ)
+    addDir("A-Z", urlAtoZ, 'ListAtoZ', iconPathAtoZ)
     addDir("Anime Movies",urlNewitems, 'showMessage', iconPath_AnimeMovie)
-    addDir("Top 5", "", 'showMessage', iconPathMost_watched)
-    
+    addDir("Top 5", "", 'showMessage', iconPathMost_watched)   
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
 
+def ListAtoZ(url):
+    listAtoZ = string.uppercase[:26]
+    i = 0
+    while i< 26:
+        #showMessage("http://okanime.com/letter/" +listAtoZ[i]+ "/?orderby=title","","")
+        addDir(listAtoZ[i], "http://okanime.com/letter/"+listAtoZ[i] +"/page/1/", 'listShows',os.path.join(thumbsDir,listAtoZ[i] + ".png" )  )
+        i+=1
+    if forceViewMode:
+        xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
+    xbmcplugin.endOfDirectory(pluginhandle)
 
+        
 def listShows(url):
     htmlfile = urllib.urlopen(url)
     htmltext = htmlfile.read()
@@ -197,8 +207,8 @@ elif mode == 'listEpsodes':
     listEpsodes(url)
 elif mode == 'listShows':
     listShows(url)
-elif mode == 'listChannels':
-    listChannels()
+elif mode == 'ListAtoZ':
+    ListAtoZ(url)
 elif mode == 'showMessage':
     showMessage('Coming Soon','','')
 else:

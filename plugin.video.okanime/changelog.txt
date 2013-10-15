@@ -12,3 +12,6 @@
 
 0.4.0
 - prepare for release
+
+0.5.0
+- enabling alphabetical order list
