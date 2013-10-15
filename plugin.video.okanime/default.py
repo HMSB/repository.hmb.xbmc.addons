@@ -32,14 +32,14 @@ iconPathMost_watched = os.path.join(thumbsDir, "top5.jpeg")
 iconPathMore = os.path.join(thumbsDir, "more.jpeg")
 iconPathAtoZ = os.path.join(thumbsDir, "AtoZ.png")
 urlShows = "http://okanime.com/category/anime/page/1/" 
-urlNewitems = ""
 urlAtoZ = "http://okanime.com/letter/A/?orderby=title"
+urlMovies = "http://okanime.com/category/movie/page/1/"
 
 def index(): 
-    addDir("Latest Items آخر الإضافات", urlShows, 'listShows', iconPathShows)
-    addDir("A-Z", urlAtoZ, 'ListAtoZ', iconPathAtoZ)
-    addDir("Anime Movies",urlNewitems, 'showMessage', iconPath_AnimeMovie)
-    addDir("Top 5", "", 'showMessage', iconPathMost_watched)   
+    addDir("Latest Items اخر الإضافات", urlShows, 'listShows', iconPathShows)
+    addDir("A-Z الترتيب الأبجدي", urlAtoZ, 'ListAtoZ', iconPathAtoZ)
+    addDir("Anime Movies افلام الانمي",urlMovies, 'listShows', iconPath_AnimeMovie)
+    addDir("Top 5افضل ٥ انميات ", "", 'showMessage', iconPathMost_watched)   
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
@@ -98,9 +98,9 @@ def listEpsodes(showID):
     pattern1 = re.compile(regex1)
     episodeID = re.findall(pattern1,htmltext)  
     if  len(episodeID)<1:
-        showMessage("No Episodes Yet", "لم تتم اضافة اي حلقة بعد","")
+        showMessage("No Episodes Yet", "لم تتم الإضافة بعد","")
         numOfEpisodes = []
-        i = 100
+        i = 1000
     else:
         urlCh = "http://okanime.com/?post_type=episode&p=" + episodeID[0]
         htmlfile = urllib.urlopen(urlCh)
@@ -112,7 +112,7 @@ def listEpsodes(showID):
        # showMessage(showID2[0], showID, urlCh)
         htmlfile = urllib.urlopen(urleps)
         htmltext = htmlfile.read()
-        regex1 = '(.*?) الحلقة'
+        regex1 = '''(.*?) الحلقة'''
         regex2 = '''p=(.*?)"'''
         pattern1 = re.compile(regex1)
         pattern2 = re.compile(regex2)
@@ -120,7 +120,7 @@ def listEpsodes(showID):
         episodeID = re.findall(pattern2,htmltext) 
         i = 0  
     while i< len(numOfEpisodes):
-        addLink("الحلقة رقم " + str(i+1), "http://okanime.com/?post_type=episode&p=" + episodeID[i], 'playVideo', '', 'Plot', 000, 'date', str(i))
+        addLink("الحلقة " + str(i+1), "http://okanime.com/?post_type=episode&p=" + episodeID[i], 'playVideo', '', 'Plot', 000, 'date', str(i))
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
@@ -128,13 +128,6 @@ def listEpsodes(showID):
 
 
 def playVideo(url):
-   # htmlfile = urllib.urlopen(url)
-   # htmltext = htmlfile.read()
-   # regex1 = '''<a href=(.*?) target=FRAME1 class="stream-link">google</a>'''
-   # pattern1 = re.compile(regex1)
-    #video_path = re.findall(pattern1,htmltext)
-    #video_path = "https://r5---sn-cg07luee.c.docs.google.com/videoplayback?requiressl=yes&shardbypass=yes&cmbypass=yes&id=3f43cf8b0a8d0b2a&itag=18&source=webdrive&app=docs&ip=86.51.182.21&ipbits=0&expire=1381638254&sparams=requiressl,shardbypass,cmbypass,id,itag,source,ip,ipbits,expire&signature=6B9CDD2A7AEC4B8DC467FB0BBF6C2D09AB6828BF.86C57875B0438EE9555171037A2C7683F18394B3&key=ck2&ir=1&ms=tsu&mt=1381634589&mv=m&cpn=hbs574nTpPTFmwpW"
-    #video_path = "https://r8---sn-cg07luee.c.docs.google.com/videoplayback?requiressl=yes&shardbypass=yes&cmbypass=yes&id=aaccf970a874fed4&itag=35&source=webdrive&app=docs&ip=86.51.182.21&ipbits=0&expire=1381684165&sparams=requiressl,shardbypass,cmbypass,id,itag,source,ip,ipbits,expire&signature=1D6F5EE04F757025C9D61BDAA4FF0BBE66B75190.42D57AA26AF651CC3AD50DCD2C74EBC9D043C6AB&key=ck2&ir=1&ms=tsu&mt=1381680491&mv=m&type=video/x-flv&quality=large"
     htmlfile = urllib.urlopen(url)
     htmltext = htmlfile.read()
     regex1 = '''<a href=(.*?) target=FRAME1 class="stream-link">google</a>'''
