@@ -34,12 +34,13 @@ iconPathAtoZ = os.path.join(thumbsDir, "AtoZ.png")
 urlShows = "http://okanime.com/category/anime/page/1/" 
 urlAtoZ = "http://okanime.com/letter/A/?orderby=title"
 urlMovies = "http://okanime.com/category/movie/page/1/"
+urlTop5 = "http://okanime.com/category/anime/page/1/"
 
 def index(): 
     addDir("Latest Items اخر الإضافات", urlShows, 'listShows', iconPathShows)
     addDir("A-Z الترتيب الأبجدي", urlAtoZ, 'ListAtoZ', iconPathAtoZ)
     addDir("Anime Movies افلام الانمي",urlMovies, 'listShows', iconPath_AnimeMovie)
-    addDir("Top 5افضل ٥ انميات ", "", 'showMessage', iconPathMost_watched)   
+    addDir("Top 5افضل ٥ انميات ", urlTop5, 'listShowsTop5', iconPathMost_watched)   
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
@@ -48,13 +49,32 @@ def ListAtoZ(url):
     listAtoZ = string.uppercase[:26]
     i = 0
     while i< 26:
-        #showMessage("http://okanime.com/letter/" +listAtoZ[i]+ "/?orderby=title","","")
         addDir(listAtoZ[i], "http://okanime.com/letter/"+listAtoZ[i] +"/page/1/", 'listShows',os.path.join(thumbsDir,listAtoZ[i] + ".png" )  )
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
 
+def listShowsTop5(url):
+    htmlfile = urllib.urlopen(url)
+    htmltext1 = htmlfile.read()
+    htmltext = re.sub(r'^(.|\n)*<img src="http://okanime.com/images/widget-stars.png', '', htmltext1, re.S)
+    regex1 = '''<a href="http://okanime.com/'''+'''[^,/]*/"'''+''' title="(.*?)">\n'''
+    regex2 = '''<img src="(.*?)" width="'''
+    regex3 = '''<a href="http://okanime.com/(.*?)/" class="post-title"'''
+    pattern1 = re.compile(regex1)
+    pattern2 = re.compile(regex2)
+    pattern3 = re.compile(regex3)
+    show_name = re.findall(pattern1,htmltext)
+    img_path = re.findall(pattern2,htmltext)
+    showID = re.findall(pattern3,htmltext)
+    i = 0
+    while i< len(show_name):
+        addDir(show_name[i], showID[i], 'listEpsodes', img_path[i])
+        i+=1
+    if forceViewMode:
+        xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
+    xbmcplugin.endOfDirectory(pluginhandle)
         
 def listShows(url):
     htmlfile = urllib.urlopen(url)
@@ -109,7 +129,6 @@ def listEpsodes(showID):
         pattern1 = re.compile(regex1)
         showID2 = re.findall(pattern1,htmltext)
         urleps = "http://okanime.com/episode/?cat=" + showID2[0]
-       # showMessage(showID2[0], showID, urlCh)
         htmlfile = urllib.urlopen(urleps)
         htmltext = htmlfile.read()
         regex1 = '''(.*?) الحلقة'''
@@ -147,7 +166,6 @@ def playVideo(url):
     listitem = xbmcgui.ListItem(path=video_path)
     #listitem.setInfo(type="Video", infoLabels={ "plot": desc})
     xbmcplugin.setResolvedUrl(pluginhandle, True, listitem)
-    #xbmc.executebuiltin('XBMC.Notification(%s, 5000)'%(video_path)) 
 
     
 def addLink(name, url, mode, iconimage, desc, length="", date="", nr=""):
@@ -193,14 +211,15 @@ mode = urllib.unquote_plus(params.get('mode', ''))
 url = urllib.unquote_plus(params.get('url', ''))
 type = urllib.unquote_plus(params.get('type', ''))
 
-
 if mode == 'playVideo':
     playVideo(url)    
 elif mode == 'listEpsodes':
     listEpsodes(url)
 elif mode == 'listShows':
     listShows(url)
-elif mode == 'ListAtoZ':
+elif mode == 'listShowsTop5':
+    listShowsTop5(url)
+elif mode == 'listShowsTop5':
     ListAtoZ(url)
 elif mode == 'showMessage':
     showMessage('Coming Soon','','')
