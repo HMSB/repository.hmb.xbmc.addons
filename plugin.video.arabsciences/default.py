@@ -39,21 +39,21 @@ prefRes = addon.getSetting("prefRes")
 prefRes = [1080, 720, 520, 480, 360, 240][int(prefRes)]
 itemsPerPage = addon.getSetting("itemsPerPage")
 itemsPerPage = ["25", "50", "75", "100"][int(itemsPerPage)]
-iconPathIcon1 = os.path.join(thumbsDir, "icon1.png")
+iconPathIcon1 = os.path.join(thumbsDir, "icon1.jpeg")
 iconPathIcon2 = os.path.join(thumbsDir, "icon2.jpeg")
-iconPathIcon3 = os.path.join(thumbsDir, "icon3.png")
-iconPathIcon4 = os.path.join(thumbsDir, "icon4.png")
+iconPathIcon3 = os.path.join(thumbsDir, "icon3.jpeg")
+iconPathIcon4 = os.path.join(thumbsDir, "icon4.jpeg")
 urlMain = "http://www.arabsciences.com/"
 url1 = "http://www.arabsciences.com/category/tv-channels/"
 url2 = "http://www.arabsciences.com/page/1/"
-url3 = ""
-url4 = ""
+url3 = "http://www.arabsciences.com/category/tv-channels/"
+url4 = "http://www.arabsciences.com/"
 
 def index(): 
-    addDir("Channels قنوات البثّ", url1, 'listLevel11', iconPathIcon1)
-    addDir("Main الصفحةا الأولى", url2, 'listLevel12', iconPathIcon2)
-    addDir("Level13 name", url3, 'listLevel13', iconPathIcon3)
-    addDir("Level14 name", url4, 'listLevel14', iconPathIcon4)
+    addDir("Main الصفحةا الأولى", url2, 'listLevel12', iconPathIcon1)
+    addDir("Channels قنوات البثّ", url1, 'listLevel11', iconPathIcon2)
+    addDir("تصنيف البرامج", url3, 'listLevel13', iconPathIcon3)
+    addDir("الأكثر مشاهدة", url4, 'listLevel14', iconPathIcon4)
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
@@ -103,6 +103,42 @@ def listLevel12(url):
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
 
+def listLevel13(url):
+    htmlfile = urllib.urlopen(url)
+    htmltext = htmlfile.read()
+    regex1 = '''<span class="wpmega-link-title">(.*?)</span>'''
+    regex3 = '''<a href="http://www.arabsciences.com/category/categories/(.*?)/"'''
+    pattern1 = re.compile(regex1)
+    pattern3 = re.compile(regex3)
+    ch_name = re.findall(pattern1,htmltext)
+    ch_path = re.findall(pattern3,htmltext)
+    i = 0
+    while i<len(ch_path):
+        addDir(ch_name[i +1 + ch_name.index("تصنيف البرامج")], url1 + ch_path[i]+"/page/1/", 'listLevelLast', os.path.join(thumbsDir, ch_name[i]+".jpeg"))
+        i+=1
+    if forceViewMode:
+        xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
+    xbmcplugin.endOfDirectory(pluginhandle)
+    
+def listLevel14(url):
+    htmlfile = urllib.urlopen(url)
+    htmltext = htmlfile.read()
+    htmltext = re.sub("&#(\d+)(;|(?=\s))", '', htmltext)
+    htmltext = re.sub(r'''^(.|\n)*<h3 class="widgettitle">الأكثر مشاهدة</h3>''', '', htmltext, re.S)
+    htmltext = re.sub(r'''</div>(.|\n)*$''', '', htmltext, re.S)
+    regex1 = '''" title="(.*?)"'''
+    regex2 = '''<a href="(.*?)"'''
+    pattern1 = re.compile(regex1)
+    pattern2 = re.compile(regex2)    
+    ch_name = re.findall(pattern1,htmltext)
+    ch_path = re.findall(pattern2,htmltext)
+    i = 0
+    while i< len(ch_name):
+        addLink(ch_name[i], ch_path[i], 'playVideo', "", 'Plot', 000, 'date', str(i))
+        i+=1
+    if forceViewMode:
+        xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
+    xbmcplugin.endOfDirectory(pluginhandle)
 
 def listLevelLast(url):
     #http://www.arabsciences.com/category/tv-channels/natgeoad/page/2/
@@ -218,6 +254,10 @@ if mode == 'playVideo':
     playVideo(url)
 elif mode == 'listLevelLast':
     listLevelLast(url)
+elif mode == 'listLevel14':
+    listLevel14(url)
+elif mode == 'listLevel13':
+    listLevel13(url)
 elif mode == 'listLevel12':
     listLevel12(url)
 elif mode == 'listLevel11':
