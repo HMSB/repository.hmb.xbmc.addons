@@ -15,3 +15,6 @@
 
 0.6.0
 -adding top viewed and categories
+
+0.7.0
+- fix thumbnails
