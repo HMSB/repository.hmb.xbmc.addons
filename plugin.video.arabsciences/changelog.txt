@@ -12,3 +12,6 @@
 
 0.5.0
 -scraping main page
+
+0.6.0
+-adding top viewed and categories
