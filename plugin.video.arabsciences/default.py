@@ -70,7 +70,7 @@ def listLevel11(url):
     ch_path = re.findall(pattern3,htmltext)
     i = 1
     while ch_name[i]!="تصنيف البرامج":
-        addDir(ch_name[i], url1 + ch_path[i+3]+"/page/1/", 'listLevelLast', os.path.join(thumbsDir, ch_name[i]+".jpeg"))
+        addDir(ch_name[i], url1 + ch_path[i+3]+"/page/1/", 'listLevelLast', os.path.join(thumbsDir, ch_path[i+3]+".jpeg"))
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
@@ -114,7 +114,7 @@ def listLevel13(url):
     ch_path = re.findall(pattern3,htmltext)
     i = 0
     while i<len(ch_path):
-        addDir(ch_name[i +1 + ch_name.index("تصنيف البرامج")], url1 + ch_path[i]+"/page/1/", 'listLevelLast', os.path.join(thumbsDir, ch_name[i]+".jpeg"))
+        addDir(ch_name[i +1 + ch_name.index("تصنيف البرامج")], url1 + ch_path[i]+"/page/1/", 'listLevelLast', os.path.join(thumbsDir))
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
