@@ -176,8 +176,8 @@ def playVideo(url):
     htmltext = htmlfile.read()
     #regex1 = '''file":"http.*://www.youtube.com/watch\?v=(.*?)"'''
     regex1 = '''http.*://www.youtube.com/watch\?v=(.*?)"|src="http://www.youtube.com/embed/(.*)\?'''
-    #regex2 = '''type="video/mp4" href="(.*?)"'''
     regex2 = '''type="video/mp4" href="(.*?)"|<meta itemprop="contentURL" content="http://www.arabsciences.com/wp-content/uploads/(.*?)"'''
+    #regex2 = '''type="video/mp4" href="(.*?)"'''
     pattern1 = re.compile(regex1)
     pattern2 = re.compile(regex2)
     videoID1 = re.findall(pattern1,htmltext)
