@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<addon id="plugin.video.arabsciences" name="arabsciences" version="0.7.3" provider-name="HMB">
+<addon id="plugin.video.arabsciences" name="arabsciences" version="0.7.4" provider-name="HMB">
     <requires>
         <import addon="xbmc.python" version="2.1.0"/>
     </requires>
