@@ -176,7 +176,8 @@ def playVideo(url):
     htmltext = htmlfile.read()
     #regex1 = '''file":"http.*://www.youtube.com/watch\?v=(.*?)"'''
     regex1 = '''http.*://www.youtube.com/watch\?v=(.*?)"|src="http://www.youtube.com/embed/(.*)\?'''
-    regex2 = '''type="video/mp4" href="(.*?)"'''
+    #regex2 = '''type="video/mp4" href="(.*?)"'''
+    regex2 = '''type="video/mp4" href="(.*?)"|<meta itemprop="contentURL" content="http://www.arabsciences.com/wp-content/uploads/(.*?)"'''
     pattern1 = re.compile(regex1)
     pattern2 = re.compile(regex2)
     videoID1 = re.findall(pattern1,htmltext)
@@ -192,7 +193,7 @@ def playVideo(url):
         pattern4 = re.compile(regex4)
         videoDesc = re.findall(pattern4,htmltext)
     else:
-        urlVideo = videoID2[0]
+        urlVideo = filter(None, videoID2[0])[0]
         videoDesc = "No Plot"
     #urlVideo = "plugin://plugin.video.youtube/?path=/root/video&action=play_video&videoid=H-WMIQLbpJA"
     # adding description
