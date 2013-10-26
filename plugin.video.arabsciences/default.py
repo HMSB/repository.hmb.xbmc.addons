@@ -80,6 +80,7 @@ def listLevel12(url):
     htmlfile = urllib.urlopen(url)
     htmltext = htmlfile.read()
     htmltext = re.sub("&#(\d+)(;|(?=\s))", '', htmltext)
+    htmltext = re.sub('''^(.|\n)*<div id="main">''', '', htmltext)
     regex1 = '''rel="bookmark" title="(.*?)"'''
     regex2 = '''<img width="180" height="135" src="(.*?)" class="attachment-post-thumbnail wp-post-image" alt="'''
     regex3 = '''" href="(.*?)" title="'''
