@@ -48,7 +48,7 @@
     </extension>
 </addon>
 
-<addon id="skin.xperience1080" version="2.1.1.1" name="Xperience1080" provider-name="`Black">
+<addon id="skin.xperience1080.ara" version="2.1.1.1" name="Xperience1080 Arabic" provider-name="`Black">
 	<requires>
 		<import addon="xbmc.gui" version="4.0.0" />
 		<import addon="service.skin.widgets" version="0.0.25" />
