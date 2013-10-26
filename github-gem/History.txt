@@ -1,0 +1,96 @@
+* "fork" copies the current "origin" to a remote called "upstread"; this will allow an undo action
+
+== 0.7.2 2012-03-20
+
+* Upgrade highline
+
+== 0.7.1 2012-03-20
+
+* Upgrade launchy [thx @copiousfreetime]
+
+== 0.7.0 2012-03-20
+
+* Fixed fork + create-from-local tasks (moved to github v2 API)
+
+== 0.6.2 2011-04-03
+
+* No C-extension dependencies by default (using json_pure instead of json)
+
+== 0.6.1 2011-04-03
+
+* Can install github into ruby 1.9
+* Test suite runs in ruby 1.9
+* Bumped development requirements to activerecord 3.0
+
+== 0.6.0 2011-01-30
+
+* If credentials not setup, then user prompted for them
+* Corrected the "gem source --add" call [kedarmhaswade]
+* Verify network-cache is non-empty [bfroehle]
+
+== 0.5.0 2011-1-17
+
+* Support for ruby 1.9.2 [keithpitt]
+* Clean fail if haven't setup github config yet [keithpitt]
+
+== 0.4.6 2010-11-04
+
+* Fix recent https migration of github.com [fishman]
+
+== 0.4.5 2010-10-25
+
+* Added "gh admin" - to open the Admin page for this project
+
+== 0.4.4 2010-10-17
+
+* Fixed 'create-from-local' to correctly select public/private [scott]
+
+== 0.4.2
+
+New protocols supported: http, git+ssh, git+ssh://git@
+
+Added missing 'json' gem dependency.
+
+== 0.4.1
+
+Updated Commands:
+  * gh home - no longer appends /tree/master to the end of the URL
+  * gh create-from-local - fixed quoting bug to prevented project creation
+
+== 0.4.0
+
+Releasing to GemCutter!
+
+Maintenance taken over by Dr Nic Williams.
+Post issues/bugs to http://github.com/defunkt/github-gem/issues
+
+New Commands:
+  * gh issues web [user] - opens the Issues page
+
+Miscellaneous:
+  * no longer using old /network/members API call (which is 500ing at the moment)
+
+== 0.3.10
+
+* gh clone --search query -- now includes project descriptions
+* bugfix
+  * added highline dependency
+
+== 0.3.9
+
+* gh clone --search query -- to search for a repo and then clone it
+* fixed all the specs and started covering some commands that did not already have specs
+
+== 0.3.X
+
+* Some stuff done by some people
+
+== 0.1.4
+
+* Added usage notes to commands. [topfunky]
+* Added config option to set github.user and github.repo. [topfunky]
+* Uses current user to automatically use SSH when cloning own projects.
+
+== 0.1.3
+
+* Original version
