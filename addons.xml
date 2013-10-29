@@ -63,6 +63,20 @@
 	</extension>
 </addon>
 
+<addon id="repository.hmb.xbmc-plugins" name="HMB Repository" version="1.1.0" provider-name="HMB">
+	<extension point="xbmc.addon.repository" name="HMB Repository">
+		<info compressed="false">https://raw.github.com/HMSB/repository.hmb.xbmc.addons/master/addons.xml</info>
+		<checksum>https://raw.github.com/HMSB/repository.hmb.xbmc.addons/master/addons.xml.md5</checksum>
+		<datadir zip="true">http://hmsb.github.io/repository.hmb.xbmc.addons/</datadir>
+	</extension>
+	<extension point="xbmc.addon.metadata">
+        <summary lang="en">Repository HMB</summary>
+		<description lang="en">HMB Repository for XBMC</description>
+		<disclaimer></disclaimer>
+		<platform>all</platform>
+	</extension>
+</addon>
+
 <addon id="skin.xperience1080.ara" version="2.1.1.1" name="Xperience1080 Arabic" provider-name="`Black">
 	<requires>
 		<import addon="xbmc.gui" version="4.0.0" />
