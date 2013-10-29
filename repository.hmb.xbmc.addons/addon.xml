@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.hmb.xbmc.addons" name="HMB Repository" version="1.1.0" provider-name="HMB">
+	<extension point="xbmc.addon.repository" name="HMB Repository">
+		<info compressed="false">https://raw.github.com/HMSB/repository.hmb.xbmc.addons/master/addons.xml</info>
+		<checksum>https://raw.github.com/HMSB/repository.hmb.xbmc.addons/master/addons.xml.md5</checksum>
+		<datadir zip="true">http://hmsb.github.io/repository.hmb.xbmc.addons/</datadir>
+	</extension>
+
+	<extension point="xbmc.addon.metadata">
+		<summary>HMsB repo</summary>
+		<description>HMB repo</description>
+		<disclaimer>No media content is hosted or streamed by the makers of this addon. Some parts of this addon may not be legal in your country of residence - please check with your local laws before installing.</disclaimer>
+		<platform>all</platform>
+	</extension>
+</addon>
