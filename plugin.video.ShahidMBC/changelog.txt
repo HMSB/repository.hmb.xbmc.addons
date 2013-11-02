@@ -28,3 +28,7 @@
 
 0.8.1
 - Fix channel missed items in channel list
+
+0.8.2
+-adding pageURL and swfURL
+

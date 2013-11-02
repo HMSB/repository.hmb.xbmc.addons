@@ -11,6 +11,22 @@ import xbmcplugin
 import xbmcgui
 import xbmcaddon
 import json
+import xbmc
+
+REMOTE_DBG = False 
+
+# append pydev remote debugger
+if REMOTE_DBG:
+    # Make pydev debugger works for auto reload.
+    # Note pydevd module need to be copied in XBMC\system\python\Lib\pysrc
+    try:
+        import pysrc.pydevd as pydevd
+    # stdoutToServer and stderrToServer redirect stdout and stderr to eclipse console
+        pydevd.settrace('localhost', stdoutToServer=True, stderrToServer=True)
+    except ImportError:
+        sys.stderr.write("Error: " +
+            "You must add org.python.pydev.debug.pysrc to your PYTHONPATH.")
+        sys.exit(1)
 
 socket.setdefaulttimeout(30)
 pluginhandle = int(sys.argv[1])
@@ -200,7 +216,12 @@ def playVideo(ch_path):
     else: 
         playResPos = resolution.index(prefRes)       
     # Play video
-    listitem = xbmcgui.ListItem(path=rtmpURL[playResPos])
+    rtmpURLfinal = re.sub("/v1/mp4:media", "/v1/ playpath=mp4:media",rtmpURL[playResPos])
+    rtmpURLfinal = rtmpURLfinal + " pageURL=" + urlBase + ch_path + " swfUrl=http://s.delvenetworks.com/deployments/flash-player/flash-player-5.6.2.swf?ldr=ldr"
+    #rtmpURLfinal = rtmpURLfinal + " pageURL=http://assets.delvenetworks.com/player/fp10loader.swf swfUrl=http://s.delvenetworks.com/deployments/flash-player/flash-player-5.6.2.swf?ldr=ldr"
+    listitem = xbmcgui.ListItem(path=rtmpURLfinal)
+ #   listitem = xbmcgui.ListItem(path="rtmpe://mbc3.csl.delvenetworks.com/a6344/v1/ playpath=mp4:media/2fda1d3fd7ab453cad983544e8ed70e4/bbccfbfd519648128f5fec290f2f74b3/78eb17d59e9a4ae3a4888fc85fd3a69e/still_standing_s01_e01_vod.mp4  pageURL=http://assets.delvenetworks.com/player/fp10loader.swf?allowEmbed=true&allowSharePanel=true&allowHttpDownload=&startQuality=200&mediaId=08e681cdd644444e8cedd2507d027a1a&autoplay=true&playerForm=64fc5d4a5f47400fac523fba125a8de8&deepLink=true&77926330 swfUrl=http://s.delvenetworks.com/deployments/flash-player/flash-player-5.6.2.swf?ldr=ldr")
+ #   listitem = xbmcgui.ListItem(path=rtmpURL[playResPos])
     listitem.setInfo(type="Video", infoLabels={ "plot": desc})
     xbmcplugin.setResolvedUrl(pluginhandle, True, listitem)
     
