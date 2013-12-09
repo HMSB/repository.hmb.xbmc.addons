@@ -22,11 +22,12 @@ if REMOTE_DBG:
     try:
         import pysrc.pydevd as pydevd
     # stdoutToServer and stderrToServer redirect stdout and stderr to eclipse console
-        pydevd.settrace('localhost', stdoutToServer=True, stderrToServer=True)
+        pydevd.settrace('192.168.0.12', stdoutToServer=True, stderrToServer=True)
     except ImportError:
         sys.stderr.write("Error: " +
             "You must add org.python.pydev.debug.pysrc to your PYTHONPATH.")
         sys.exit(1)
+
 
 socket.setdefaulttimeout(30)
 pluginhandle = int(sys.argv[1])
@@ -53,7 +54,7 @@ urlSearch = "http://shahid.mbc.net/Ajax/seriesFilter?year=0&dialect=0&title=0&ge
 MBCproviderID = '2fda1d3fd7ab453cad983544e8ed70e4'
 
 def index(): 
-    addDir("Channles", "", 'listChannels', iconPathChannels)
+    addDir("القنوات", "", 'listChannels', iconPathChannels)
     addDir("New Items", "http://shahid.mbc.net/media/episodes?sort=latest", 'listEpisodesSorted', iconPathWhats_new)
     addDir("Most Watched", "http://shahid.mbc.net/media/episodes?sort=popular_all", 'listEpisodesSorted', iconPathMost_watched)
     addDir("A-Z", urlSearch, 'listShowsSorted', iconPathAtoZ)
@@ -62,34 +63,36 @@ def index():
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def listChannels():
-    htmlfile = urllib.urlopen(urlChannels)
+    url = "http://shahid.mbc.net/api/channelList?api_key=4cd216240b9e47c3d97450b9b4866d3f&offset=0&limit=60"
+    htmlfile = urllib.urlopen(url)
     htmltext = htmlfile.read()
-    regex1 = '''<li><a href="/media/channel/'''+'''[0-9]*'''+'''/(.+?)"'''
-    regex2 = '''title=""><b><img src="(.+?)"'''
-    regex3 = '''<a href="(.+?)" title='''
+    htmltext = htmltext.replace('\/', '/')
+    regex1 = '''"name":"(.*?)"'''
+    regex2 = '''"image_url":"(.*?)"'''
+    regex3 = '''"id":"(.*?)"'''
     pattern1 = re.compile(regex1)
     pattern2 = re.compile(regex2)
     pattern3 = re.compile(regex3)
+        
     ch_name = re.findall(pattern1,htmltext)
     img_path = re.findall(pattern2,htmltext)
-    ch_path = re.findall(pattern3,htmltext)
+    ch_id = re.findall(pattern3,htmltext)
     i = 0
     while i< len(ch_name):
-        addDir(ch_name[i], ch_path[i], 'listShows', img_path[i])
+        addDir(ch_name[i], ch_id[i], 'listShows', img_path[i])
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def listShows(ch_path):
-    #urlCh = "http://shahid.mbc.net"+ ch_path
-    chID = re.findall(re.compile('''/media/channel/(.*?)/'''),ch_path)
-    urlCh = "http://shahid.mbc.net/Ajax/series_sort?offset=0&channel_id=" + chID[0] + "&sort=latest&limit=500"
+    urlCh = "http://shahid.mbc.net/api/programsList?api_key=4cd216240b9e47c3d97450b9b4866d3f&offset=0&limit=60&channel_id=" + ch_path
     htmlfile = urllib.urlopen(urlCh)
     htmltext = htmlfile.read()
-    regex1 = '''<span class="title major">(.+?)</span>'''
-    regex2 = '''title=""><b><img src="(.+?)"'''
-    regex3 = '''" href="(.*?)" title="">'''
+    htmltext = htmltext.replace('\/', '/')
+    regex1 = '''"name":"(.*?)"'''
+    regex2 = '''"image_url":"(.*?)"'''
+    regex3 = '''"id":"(.*?)"'''
     pattern1 = re.compile(regex1)
     pattern2 = re.compile(regex2)
     pattern3 = re.compile(regex3)
@@ -107,6 +110,7 @@ def listShows(ch_path):
 def listShowsSorted(urlCh):
     htmlfile = urllib.urlopen(urlCh)
     htmltext = htmlfile.read()
+    htmltext = htmltext.replace('\/', '/')
     regex1 = '''<span class="title major">(.+?)</span>'''
     regex2 = '''title=""><b><img src="(.+?)"'''
     regex3 = '''" href="(.*?)" title="">'''
@@ -125,15 +129,17 @@ def listShowsSorted(urlCh):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def listEpsodes(ch_path):
-    #urlCh = ch_path
-    #http://shahid.mbc.net/Ajax/episode/761?offset=10&media_type=program&limit=10&sort=season&season=null
-    chID = re.findall(re.compile('''/media/program/(.*?)/'''),ch_path)
-    urlCh = "http://shahid.mbc.net/Ajax/episode/" + chID[0] + "?offset=0&media_type=program&limit=5000&sort=season&season=null"
+    urlCh = "http://shahid.mbc.net/api/mediaInfoList?api_key=4cd216240b9e47c3d97450b9b4866d3f&media_id=46546&offset=0&limit=60&program_id="+ch_path+"&sub_type=episodes"  
+    urlCh = "http://old.shahid.net/api/mediaList?api_key=4cd216240b9e47c3d97450b9b4866d3f&offset=0&limit=60&program_id=" +ch_path +"&sub_type=episodes"  
+ #   urlCh = "http://old.shahid.net/api/mediaList?api_key=4cd216240b9e47c3d97450b9b4866d3f&offset=0&limit=60&program_id=" + ch_path+ "&sub_type=episodes"
+ #   urlCh = "http://shahid.mbc.net/api/mediaInfoList?api_key=4cd216240b9e47c3d97450b9b4866d3f&media_id=46546&offset=0&limit=60&program_id=1341&sub_type=episodes"
+#    xbmc.executebuiltin('XBMC.Notification(%s, 5000)'%(urlCh)) 
     htmlfile = urllib.urlopen(urlCh)
     htmltext = htmlfile.read()
-    regex1 = '''</span><span class="title">(.*?)</span>'''
-    regex2 = '''img src="(.*?)" alt="" border="0" height="" width=""'''
-    regex3 = '''</span><a href="(.+?)" title='''
+    htmltext = htmltext.replace('\/', '/')
+    regex1 = '''"series_name":"(.*?)"'''
+    regex2 = '''thumb_url":"(.*?)"'''
+    regex3 = '''"id":"(.*?)"'''
     pattern1 = re.compile(regex1)
     pattern2 = re.compile(regex2)
     pattern3 = re.compile(regex3)
@@ -141,8 +147,8 @@ def listEpsodes(ch_path):
     img_path = re.findall(pattern2,htmltext)
     ch_path = re.findall(pattern3,htmltext)
     i = 0
-    while i< len(show_name):
-        addLink(show_name[i], ch_path[i], 'playVideo', img_path[i], 'Plot', 000, 'date', str(i))
+    while i< len(img_path):
+        addLink(show_name[0], ch_path[i], 'playVideo', img_path[i], 'Plot', 000, 'date', str(i))
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
@@ -174,11 +180,13 @@ def listEpisodesSorted(urlCh):
 
 def videoInfo(ch_path):
     # extracting mediaID
-    htmlfile = urllib.urlopen(urlBase + ch_path)
+   # htmlfile = urllib.urlopen(urlBase + ch_path)
+    htmlfile = urllib.urlopen("http://shahid.mbc.net/api/mediaInfoList?api_key=4cd216240b9e47c3d97450b9b4866d3f&media_id="+ch_path+"&offset=0&limit=60")
     htmltext = htmlfile.read()
-    regex1 = '''mediaId=(.*?)&&default'''
+    htmltext = htmltext.replace('\/', '/')
+    regex1 = '''media\\/(.*?).m3u8"'''
     pattern1 = re.compile(regex1)
-    mediaID = re.findall(pattern1,htmltext)    
+    mediaID = re.findall(pattern1,htmltext)
     # obtaining rtmpURL
     urlContentProvider = 'http://production.ps.delve.cust.lldns.net/PlaylistService'
     headerValues = {'content-type' : 'text/soap+xml'}

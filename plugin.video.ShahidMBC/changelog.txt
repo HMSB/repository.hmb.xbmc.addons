@@ -32,3 +32,6 @@
 0.8.2
 -adding pageURL and swfURL
 
+0.8.5
+- partial temporary fix after Shahid complete makeover of the site
+
