@@ -79,7 +79,7 @@ def listChannels():
     ch_id = re.findall(pattern3,htmltext)
     i = 0
     while i< len(ch_name):
-        addDir(ch_name[i], ch_id[i], 'listShows', img_path[i])
+        addDir(ch_name[i].decode('raw_unicode_escape'), ch_id[i], 'listShows', img_path[i])
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
@@ -101,7 +101,7 @@ def listShows(ch_path):
     ch_path = re.findall(pattern3,htmltext)
     i = 0
     while i< len(show_name):
-        addDir(show_name[i], ch_path[i], 'listEpsodes', img_path[i])
+        addDir(show_name[i].decode('raw_unicode_escape'), ch_path[i], 'listEpsodes', img_path[i])
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')
@@ -129,11 +129,8 @@ def listShowsSorted(urlCh):
     xbmcplugin.endOfDirectory(pluginhandle)
 
 def listEpsodes(ch_path):
-    urlCh = "http://shahid.mbc.net/api/mediaInfoList?api_key=4cd216240b9e47c3d97450b9b4866d3f&media_id=46546&offset=0&limit=60&program_id="+ch_path+"&sub_type=episodes"  
+#    urlCh = "http://shahid.mbc.net/api/mediaInfoList?api_key=4cd216240b9e47c3d97450b9b4866d3f&media_id=46546&offset=0&limit=60&program_id="+ch_path+"&sub_type=episodes"  
     urlCh = "http://old.shahid.net/api/mediaList?api_key=4cd216240b9e47c3d97450b9b4866d3f&offset=0&limit=60&program_id=" +ch_path +"&sub_type=episodes"  
- #   urlCh = "http://old.shahid.net/api/mediaList?api_key=4cd216240b9e47c3d97450b9b4866d3f&offset=0&limit=60&program_id=" + ch_path+ "&sub_type=episodes"
- #   urlCh = "http://shahid.mbc.net/api/mediaInfoList?api_key=4cd216240b9e47c3d97450b9b4866d3f&media_id=46546&offset=0&limit=60&program_id=1341&sub_type=episodes"
-#    xbmc.executebuiltin('XBMC.Notification(%s, 5000)'%(urlCh)) 
     htmlfile = urllib.urlopen(urlCh)
     htmltext = htmlfile.read()
     htmltext = htmltext.replace('\/', '/')
@@ -148,7 +145,7 @@ def listEpsodes(ch_path):
     ch_path = re.findall(pattern3,htmltext)
     i = 0
     while i< len(img_path):
-        addLink(show_name[0], ch_path[i], 'playVideo', img_path[i], 'Plot', 000, 'date', str(i))
+        addLink(show_name[0].decode('raw_unicode_escape'), ch_path[i], 'playVideo', img_path[i], 'Plot', 000, 'date', str(i))
         i+=1
     if forceViewMode:
         xbmc.executebuiltin('Container.SetViewMode('+viewModeNewsShows+')')

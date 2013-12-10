@@ -35,3 +35,6 @@
 0.8.5
 - partial temporary fix after Shahid complete makeover of the site
 
+0.8.6
+-fix arabic characters
+
